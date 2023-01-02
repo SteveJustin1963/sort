@@ -4,7 +4,7 @@
 ##   examples of sorting algorithms in FORTH: (MINT later)
 
 ## Bubble sort:
-``
+```
 : BUBBLE-SORT ( a -- )
    dup length @ 1-
    0 ?DO
