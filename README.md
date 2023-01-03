@@ -3,8 +3,7 @@
 
 ##   examples of sorting algorithms in FORTH: (MINT later)
 
-## Bubble sort:
-## bs1
+## Bubble sort: bs1.f
 
 ```
 : BUBBLE-SORT ( a -- )
@@ -21,7 +20,7 @@
 ```
 This is an implementation of the bubble sort algorithm, which repeatedly iterates through the array, compares adjacent elements, and swaps them if they are in the wrong order. It continues this process until the array is sorted.
 
-## bs2
+## bs2.f
 
 ```
 : bubble-sort ( a n -- )
@@ -50,14 +49,10 @@ This implementation of Bubble sort takes a list of integers a and its length n a
 To use this code, you would first push the list and its length onto the stack, and then call the bubble-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
 use ```10 [9 5 3 1 8 6 4 2 7 0] bubble-sort``` This will leave the sorted list on the top of the stack.
 
-## bs3
+## bs3.f  
+see file
 
-
-
-
-
-## Selection sort:
-## SS1
+## Selection sort: ss1.f
 ```
 : SELECTION-SORT ( a -- )
    dup length @
@@ -76,7 +71,7 @@ use ```10 [9 5 3 1 8 6 4 2 7 0] bubble-sort``` This will leave the sorted list o
 ```
 This is an implementation of the selection sort algorithm, which repeatedly selects the minimum element from the unsorted part of the array and appends it to the sorted part.
 
-## ss2
+## ss2.f
 ```
 : selection-sort ( a n -- )
    dup 0 > if
@@ -105,9 +100,7 @@ To use this code, you would first push the list and its length onto the stack, a
 run with ```10 [9 5 3 1 8 6 4 2 7 0] selection-sort``` This will leave the sorted list on the top of the stack.
 
 
-
-## Insertion sort:
-## IS1
+## Insertion sort: is1.f
 ```
 : INSERTION-SORT ( a -- )
    dup length @
@@ -126,7 +119,8 @@ run with ```10 [9 5 3 1 8 6 4 2 7 0] selection-sort``` This will leave the sorte
 ```
 This is an implementation of the insertion sort algorithm, which repeatedly inserts the next unsorted element into the correct position in the sorted part of the array.
 
-## IS2
+## is2.f
+```
 : insertion-sort ( a n -- )
    dup 0 > if
       drop exit
@@ -153,10 +147,7 @@ This implementation of Insertion sort takes a list of integers a and its length 
 To use this code, you would first push the list and its length onto the stack, and then call the insertion-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:``` use with  ```10 [9 5 3 1 8 6 4 2 7 0] insertion-sort``` This will leave the sorted list on the top of the stack.
 
 
-
-
-## Merge sort :
-## MS1
+## Merge sort : ms1.f
 
 ```
 : MERGE ( a b -- c )
@@ -204,7 +195,8 @@ and returns a new array that is the result of merging them. The MERGE-SORT funct
 To use the MERGE-SORT function, you would call it with an array on the stack, like this: ```[ 10 7 8 5 6 ] merge-sort .s``` This would print the sorted array on the stack.
 
 
-## ms2
+## ms2.f
+
 ```
 : merge-sort ( a n -- )
    dup 0 > if
@@ -231,8 +223,7 @@ This implementation of Merge sort takes a list of integers a and its length n as
 
 To use this code, you would first push the list and its length onto the stack, and then call the merge-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]: ```  run with ```10 [9 5 3 1 8 6 4 2 7 0] merge-sort ``` This will leave the sorted list on the top of the stack.
 
-## quick sort:
-## qs1
+## quick sort: qs1.f
 
 ```
 : PARTITION ( a lo hi -- lo' hi' )
@@ -267,17 +258,10 @@ To use this code, you would first push the list and its length onto the stack, a
    then
 ;
 ```
-This implementation of quick sort first defines a function PARTITION that selects a pivot element and rearranges the elements of the array so that all elements less than the pivot are placed before it, and all elements greater than the pivot are placed after it. The QUICK-SORT function then uses this function to recursively sort the array.
-
-To use the QUICK-SORT function, you would call it with an array and the indices of the first and last elements of the subarray to be sorted, like this:
-
-```
-[ 10 7 8 5 6 ] 0 5 quick-sort
-```
+This implementation of quick sort first defines a function PARTITION that selects a pivot element and rearranges the elements of the array so that all elements less than the pivot are placed before it, and all elements greater than the pivot are placed after it. The QUICK-SORT function then uses this function to recursively sort the array. To use the QUICK-SORT function, you would call it with an array and the indices of the first and last elements of the subarray to be sorted, like this: ```[ 10 7 8 5 6 ] 0 5 quick-sort```
 
 
-## Heap sort
-## hs1
+## Heap sort: hs1.f
 ```
 : HEAPIFY ( a i n -- )
    dup i @ n @ >
@@ -304,16 +288,9 @@ To use the QUICK-SORT function, you would call it with an array and the indices 
    LOOP
 ;
 ```
-This implementation of heap sort first defines a function HEAPIFY that restores the heap property of a binary heap by repeatedly swapping the element at the root with the largest of its children until the heap is valid. The HEAP-SORT function then uses this function to sort the array.
+This implementation of heap sort first defines a function HEAPIFY that restores the heap property of a binary heap by repeatedly swapping the element at the root with the largest of its children until the heap is valid. The HEAP-SORT function then uses this function to sort the array. To use the HEAP-SORT function, you would call it with an array and the number of elements in the array, like this: ```[ 10 7 8 5 6 ] 6 heap-sort```
 
-To use the HEAP-SORT function, you would call it with an array and the number of elements in the array, like this:
-
-```
-[ 10 7 8 5 6 ] 6 heap-sort
-```
-
-## shell sort:
-## sh1
+## shell sort: sh1.f
 ```
 : SHELL-SORT ( a n -- )
    n @ 2 /
@@ -336,16 +313,9 @@ To use the HEAP-SORT function, you would call it with an array and the number of
    repeat
 ;
 ```
-This implementation of shell sort repeatedly sorts subarrays of the input array using the gap sequence defined by the Knuth gap sequence. The gap is initialized to half the length of the array, and is repeatedly halved until it is 1.
+This implementation of shell sort repeatedly sorts subarrays of the input array using the gap sequence defined by the Knuth gap sequence. The gap is initialized to half the length of the array, and is repeatedly halved until it is 1. To use the SHELL-SORT function, you would call it with an array and the number of elements in the array, like this: ```[ 10 7 8 5 6 ] 6 shell-sort```
 
-To use the SHELL-SORT function, you would call it with an array and the number of elements in the array, like this:
-
-```
-[ 10 7 8 5 6 ] 6 shell-sort
-```
-
-## tree sort:
-## tr1
+## tree sort: tr1.f
 ```
 : INSERT ( value node -- )
    dup value @ <
@@ -385,16 +355,9 @@ To use the SHELL-SORT function, you would call it with an array and the number o
    root in-order
 ;
 ```
-This implementation of tree sort builds a binary search tree from the elements of the input array and then performs an in-order traversal of the tree to print the elements in sorted order.
+This implementation of tree sort builds a binary search tree from the elements of the input array and then performs an in-order traversal of the tree to print the elements in sorted order. To use the TREE-SORT function, you would call it with an array and the number of elements in the array, like this: ``` [ 10 7 8 5 6 ] 6 tree-sort ```
 
-To use the TREE-SORT function, you would call it with an array and the number of elements in the array, like this:
-
-```
-[ 10 7 8 5 6 ] 6 tree-sort
-```
-
-## counting sort:
-## cs1
+## counting sort: cs1.f
 
 ```
 : COUNTING-SORT ( a n -- )
@@ -414,16 +377,9 @@ To use the TREE-SORT function, you would call it with an array and the number of
    LOOP
 ;
 ```
-This implementation of counting sort uses an auxiliary array count to store the frequency of each element in the input array. It then iterates through the count array and writes each element of the input array to the output array the appropriate number of times.
+This implementation of counting sort uses an auxiliary array count to store the frequency of each element in the input array. It then iterates through the count array and writes each element of the input array to the output array the appropriate number of times. To use the COUNTING-SORT function, you would call it with an array and the number of elements in the array, like this: ```[ 10 7 8 5 6 ] 6 counting-sort```
 
-To use the COUNTING-SORT function, you would call it with an array and the number of elements in the array, like this:
-
-```
-[ 10 7 8 5 6 ] 6 counting-sort
-
-```
-
-## radix sort: rs1
+## radix sort: rs1.f
 
 ```
 : COUNTING-SORT-RADIX ( a n d -- )
@@ -452,14 +408,9 @@ To use the COUNTING-SORT function, you would call it with an array and the numbe
    drop
 ;
 ```
-This implementation of radix sort uses the counting sort algorithm to sort the elements of the input array by successive digits. It first sorts the elements by the least significant digit, then by the next least significant digit, and so on.
+This implementation of radix sort uses the counting sort algorithm to sort the elements of the input array by successive digits. It first sorts the elements by the least significant digit, then by the next least significant digit, and so on. To use the RADIX-SORT function, you would call it with an array and the number of elements in the array, like this: ```[ 10 7 8 5 6 ] 6 radix-sort```
 
-To use the RADIX-SORT function, you would call it with an array and the number of elements in the array, like this:
-```
-[ 10 7 8 5 6 ] 6 radix-sort
-```
-
-##  bucket sort: bs1
+##  bucket sort: bs1.f
 
 ```
 : BUCKET-SORT ( a n -- )
@@ -479,13 +430,9 @@ To use the RADIX-SORT function, you would call it with an array and the number o
    LOOP
 ;
 ```
-This implementation of bucket sort uses the insertion sort algorithm to sort the elements of each bucket. It first distributes the elements of the input array into a number of "buckets" based on their values, then sorts the elements in each bucket using insertion sort.
+This implementation of bucket sort uses the insertion sort algorithm to sort the elements of each bucket. It first distributes the elements of the input array into a number of "buckets" based on their values, then sorts the elements in each bucket using insertion sort. To use the BUCKET-SORT function, you would call it with an array and the number of elements in the array, like this: ``` [ 10 7 8 5 6 ] 6 bucket-sort ``` 
 
-To use the BUCKET-SORT function, you would call it with an array and the number of elements in the array, like this:
-
-``` [ 10 7 8 5 6 ] 6 bucket-sort ```
-
-## topological sort: ts1
+## topological sort: ts1.f
 ```
 : TOPOLOGICAL-SORT ( graph -- sorted )
    create sorted ,
@@ -508,11 +455,7 @@ To use the BUCKET-SORT function, you would call it with an array and the number 
    sorted
 ;
 ```
-This implementation of topological sort traverses a directed acyclic graph (DAG) and adds nodes to the sorted list in topological order. It maintains a list of nodes with indegree 0 (i.e., no incoming edges), and repeatedly selects a node from this list, adds it to the sorted list, and removes its outgoing edges from the graph.
-
-To use the TOPOLOGICAL-SORT function, you would call it with a graph on the stack, like this:
-```[ [ 1 2 ] [ 2 3 ] [ 3 4 ] [ 4 1 ] ] topological-sort .s```
-This would print the sorted list on the stack.
+This implementation of topological sort traverses a directed acyclic graph (DAG) and adds nodes to the sorted list in topological order. It maintains a list of nodes with indegree 0 (i.e., no incoming edges), and repeatedly selects a node from this list, adds it to the sorted list, and removes its outgoing edges from the graph. To use the TOPOLOGICAL-SORT function, you would call it with a graph on the stack, like this: ```[ [ 1 2 ] [ 2 3 ] [ 3 4 ] [ 4 1 ] ] topological-sort .s``` This would print the sorted list on the stack.
 
 ## Bitonic sort:  bit1.f
 is a sorting algorithm that is used to sort a list of numbers that are either in ascending or descending order.  
@@ -601,9 +544,7 @@ To use this code, you would first push the list and its length onto the stack, a
 ```10 [9 5 3 1 8 6 4 2 7 0] bitonic-sort```
 This will leave the sorted list on the top of the stack.
 
-
 ## Pancake sort: ps1.f
- 
 
 ```
 : pancake-sort ( list n -- )
