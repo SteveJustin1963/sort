@@ -4,6 +4,8 @@
 ##   examples of sorting algorithms in FORTH: (MINT later)
 
 ## Bubble sort:
+## bs1
+
 ```
 : BUBBLE-SORT ( a -- )
    dup length @ 1-
@@ -19,7 +21,7 @@
 ```
 This is an implementation of the bubble sort algorithm, which repeatedly iterates through the array, compares adjacent elements, and swaps them if they are in the wrong order. It continues this process until the array is sorted.
 
-## another
+## bs2
 
 ```
 : bubble-sort ( a n -- )
@@ -48,12 +50,14 @@ This implementation of Bubble sort takes a list of integers a and its length n a
 To use this code, you would first push the list and its length onto the stack, and then call the bubble-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
 use ```10 [9 5 3 1 8 6 4 2 7 0] bubble-sort``` This will leave the sorted list on the top of the stack.
 
+## bs3
 
 
 
 
 
 ## Selection sort:
+## SS1
 ```
 : SELECTION-SORT ( a -- )
    dup length @
@@ -72,7 +76,7 @@ use ```10 [9 5 3 1 8 6 4 2 7 0] bubble-sort``` This will leave the sorted list o
 ```
 This is an implementation of the selection sort algorithm, which repeatedly selects the minimum element from the unsorted part of the array and appends it to the sorted part.
 
-## another
+## ss2
 ```
 : selection-sort ( a n -- )
    dup 0 > if
@@ -103,6 +107,7 @@ run with ```10 [9 5 3 1 8 6 4 2 7 0] selection-sort``` This will leave the sorte
 
 
 ## Insertion sort:
+## IS1
 ```
 : INSERTION-SORT ( a -- )
    dup length @
@@ -121,7 +126,7 @@ run with ```10 [9 5 3 1 8 6 4 2 7 0] selection-sort``` This will leave the sorte
 ```
 This is an implementation of the insertion sort algorithm, which repeatedly inserts the next unsorted element into the correct position in the sorted part of the array.
 
-## another
+## IS2
 : insertion-sort ( a n -- )
    dup 0 > if
       drop exit
@@ -151,6 +156,7 @@ To use this code, you would first push the list and its length onto the stack, a
 
 
 ## Merge sort :
+## MS1
 
 ```
 : MERGE ( a b -- c )
@@ -198,7 +204,7 @@ and returns a new array that is the result of merging them. The MERGE-SORT funct
 To use the MERGE-SORT function, you would call it with an array on the stack, like this: ```[ 10 7 8 5 6 ] merge-sort .s``` This would print the sorted array on the stack.
 
 
-## another
+## ms2
 ```
 : merge-sort ( a n -- )
    dup 0 > if
@@ -226,6 +232,7 @@ This implementation of Merge sort takes a list of integers a and its length n as
 To use this code, you would first push the list and its length onto the stack, and then call the merge-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]: ```  run with ```10 [9 5 3 1 8 6 4 2 7 0] merge-sort ``` This will leave the sorted list on the top of the stack.
 
 ## quick sort:
+## qs1
 
 ```
 : PARTITION ( a lo hi -- lo' hi' )
@@ -270,6 +277,7 @@ To use the QUICK-SORT function, you would call it with an array and the indices 
 
 
 ## Heap sort
+## hs1
 ```
 : HEAPIFY ( a i n -- )
    dup i @ n @ >
@@ -305,7 +313,7 @@ To use the HEAP-SORT function, you would call it with an array and the number of
 ```
 
 ## shell sort:
-
+## sh1
 ```
 : SHELL-SORT ( a n -- )
    n @ 2 /
@@ -337,7 +345,7 @@ To use the SHELL-SORT function, you would call it with an array and the number o
 ```
 
 ## tree sort:
-
+## tr1
 ```
 : INSERT ( value node -- )
    dup value @ <
@@ -386,6 +394,7 @@ To use the TREE-SORT function, you would call it with an array and the number of
 ```
 
 ## counting sort:
+## cs1
 
 ```
 : COUNTING-SORT ( a n -- )
@@ -414,7 +423,7 @@ To use the COUNTING-SORT function, you would call it with an array and the numbe
 
 ```
 
-## radix sort:
+## radix sort: rs1
 
 ```
 : COUNTING-SORT-RADIX ( a n d -- )
@@ -450,7 +459,7 @@ To use the RADIX-SORT function, you would call it with an array and the number o
 [ 10 7 8 5 6 ] 6 radix-sort
 ```
 
-##  bucket sort:
+##  bucket sort: bs1
 
 ```
 : BUCKET-SORT ( a n -- )
@@ -476,8 +485,7 @@ To use the BUCKET-SORT function, you would call it with an array and the number 
 
 ``` [ 10 7 8 5 6 ] 6 bucket-sort ```
 
-## topological sort:
-
+## topological sort: ts1
 ```
 : TOPOLOGICAL-SORT ( graph -- sorted )
    create sorted ,
@@ -506,7 +514,7 @@ To use the TOPOLOGICAL-SORT function, you would call it with a graph on the stac
 ```[ [ 1 2 ] [ 2 3 ] [ 3 4 ] [ 4 1 ] ] topological-sort .s```
 This would print the sorted list on the stack.
 
-## Bitonic sort
+## Bitonic sort:  bit1.f
 is a sorting algorithm that is used to sort a list of numbers that are either in ascending or descending order.  
 ```
 : bitonic-sort ( list n -- )
@@ -564,7 +572,7 @@ bitonic-compare
 ```
 To use this function, you would call bitonic-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call: ```5 3 1 4 2 5 bitonic-sort```. This would leave the sorted list on the stack.
 
-## another
+## bit2.f
 ```
 : bitonic-sort ( a n -- )
    dup 0 > if
@@ -594,7 +602,7 @@ To use this code, you would first push the list and its length onto the stack, a
 This will leave the sorted list on the top of the stack.
 
 
-## Pancake sort
+## Pancake sort: ps1.f
  
 
 ```
@@ -641,7 +649,8 @@ pancake-flip
 ```
 To use this function, you would call pancake-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call:```5 3 1 4 2 5 pancake-sort``` . This would leave the sorted list on the stack.
 
-## another
+## ps2.f
+
 ```
 : pancake-sort ( a n -- )
    dup 0 > if
@@ -674,7 +683,7 @@ This will leave the sorted list on the top of the stack.
 
 
 
-## Strand sort
+## Strand sort: str1.f
 ```
 : strand-sort ( list n -- )
 \ This function sorts the list of numbers in ascending order
@@ -731,7 +740,7 @@ strand-compare
 ```
 To use this function, you would call strand-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call: ```5 3 1 4 2 5 strand-sort```. 
 
-## another
+## str2.f
 ```
 : strand-sort ( a n -- )
    dup 0 > if
@@ -760,7 +769,7 @@ To use this code, you would first push the list and its length onto the stack, a
 
 
 
-## Sleep sort
+## Sleep sort: slp1.f
 is a sorting algorithm that is used to sort a list of numbers. It works by starting a separate thread for each element in the list, and each thread sleeps for a number of seconds equal to the value of the element it is responsible for. When the thread wakes up, it outputs the element. Because the threads are run concurrently, the output will be in sorted order. Here is an example of how you could implement Sleep sort in FORTH 83 using the multithreading features of the language:
 ```
 : sleep-sort ( list n -- )
@@ -795,7 +804,7 @@ sleep-sort-thread
 ```
 To use this function, you would call sleep-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call:```5 3 1 4 2 5 sleep-sort```. This would output the sorted list to the console. Note that this implementation is purely theoretical, as FORTH not have any built-in support for multithreading.
 
-## another
+## slp2.f
 ```
 \ https://rosettacode.org/wiki/Sorting_algorithms/Sleep_sort#FreeBASIC
 : sandman ( list n -- )
@@ -859,7 +868,7 @@ key
 
 
 
-## Cocktail sort
+## Cocktail sort: cock1.f
 
 ```
 : cocktail-sort ( addr1 addr2 -- )
@@ -885,7 +894,7 @@ This implementation sorts an array of values located at addresses addr1 and addr
 
 
 
-## Cycle sort
+## Cycle sort :cyc1.f
 ```
 : cycle-sort ( addr1 addr2 -- )
     dup >r
@@ -918,7 +927,7 @@ This implementation sorts an array of values located at addresses addr1 and addr
 
 
 
-## Stooge sort
+## Stooge sort :sto1.f
 ```
 : stooge-sort ( addr1 addr2 -- )
     dup >r
@@ -945,7 +954,7 @@ This implementation sorts an array of values located at addresses addr1 and addr
 This implementation sorts an array of values located at addresses addr1 and addr2. The addresses should be passed in with addr1 being the lower address and addr2 being the higher address. The sorted array will be in ascending order.
 
 
-## Gnome sort
+## Gnome sort :gn1.f
 ```
 : gnome-sort ( addr1 addr2 -- )
     dup >r
