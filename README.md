@@ -19,6 +19,40 @@
 ```
 This is an implementation of the bubble sort algorithm, which repeatedly iterates through the array, compares adjacent elements, and swaps them if they are in the wrong order. It continues this process until the array is sorted.
 
+## another
+
+```
+: bubble-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Bubble sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly iterating through the list, comparing adjacent elements and swapping them if they are in the wrong order, until the list is sorted.
+
+To use this code, you would first push the list and its length onto the stack, and then call the bubble-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
+use ```10 [9 5 3 1 8 6 4 2 7 0] bubble-sort``` This will leave the sorted list on the top of the stack.
+
+
+
+
+
+
 ## Selection sort:
 ```
 : SELECTION-SORT ( a -- )
@@ -38,6 +72,36 @@ This is an implementation of the bubble sort algorithm, which repeatedly iterate
 ```
 This is an implementation of the selection sort algorithm, which repeatedly selects the minimum element from the unsorted part of the array and appends it to the sorted part.
 
+## another
+```
+: selection-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Selection sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly finding the minimum element in the list and placing it at the front.
+
+To use this code, you would first push the list and its length onto the stack, and then call the selection-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
+run with ```10 [9 5 3 1 8 6 4 2 7 0] selection-sort``` This will leave the sorted list on the top of the stack.
+
+
+
 ## Insertion sort:
 ```
 : INSERTION-SORT ( a -- )
@@ -56,6 +120,35 @@ This is an implementation of the selection sort algorithm, which repeatedly sele
 ;
 ```
 This is an implementation of the insertion sort algorithm, which repeatedly inserts the next unsorted element into the correct position in the sorted part of the array.
+
+## another
+: insertion-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Insertion sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly inserting each element into its proper position in the sorted portion of the list.
+
+To use this code, you would first push the list and its length onto the stack, and then call the insertion-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:``` use with  ```10 [9 5 3 1 8 6 4 2 7 0] insertion-sort``` This will leave the sorted list on the top of the stack.
+
+
+
 
 ## Merge sort :
 
@@ -102,13 +195,7 @@ This is an implementation of the insertion sort algorithm, which repeatedly inse
 This implementation of merge sort first defines a function MERGE that takes two sorted arrays 
 and returns a new array that is the result of merging them. The MERGE-SORT function then uses this function to recursively sort the input array.
 
-To use the MERGE-SORT function, you would call it with an array on the stack, like this:
-
-```
-[ 10 7 8 5 6 ] merge-sort .s
-
-```
-This would print the sorted array on the stack.
+To use the MERGE-SORT function, you would call it with an array on the stack, like this: ```[ 10 7 8 5 6 ] merge-sort .s``` This would print the sorted array on the stack.
 
 
 ## quick sort:
