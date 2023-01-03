@@ -198,6 +198,33 @@ and returns a new array that is the result of merging them. The MERGE-SORT funct
 To use the MERGE-SORT function, you would call it with an array on the stack, like this: ```[ 10 7 8 5 6 ] merge-sort .s``` This would print the sorted array on the stack.
 
 
+## another
+```
+: merge-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Merge sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly dividing the list in half, sorting the halves, and then merging them back together.
+
+To use this code, you would first push the list and its length onto the stack, and then call the merge-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]: ```  run with ```10 [9 5 3 1 8 6 4 2 7 0] merge-sort ``` This will leave the sorted list on the top of the stack.
+
 ## quick sort:
 
 ```
