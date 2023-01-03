@@ -393,11 +393,467 @@ To use the TOPOLOGICAL-SORT function, you would call it with a graph on the stac
 This would print the sorted list on the stack.
 
 ## Bitonic sort
+is a sorting algorithm that is used to sort a list of numbers that are either in ascending or descending order.  
+```
+: bitonic-sort ( list n -- )
+\ This function sorts the list of numbers in ascending order
+\ using the Bitonic sort algorithm.
+dup 0< if
+drop exit
+then
+1- dup
+rot
+/ 2 swap
+bitonic-merge
+;
+
+: bitonic-merge ( list n -- )
+\ This function merges two sublists of the given list in ascending order.
+dup 0< if
+drop exit
+then
+dup 1-
+rot
+/ 2 swap
+bitonic-compare
+;
+
+: bitonic-compare ( list n -- )
+\ This function compares two adjacent elements in the list and swaps them
+\ if they are out of order.
+dup 0< if
+drop exit
+then
+dup 1-
+rot
+/ 2 swap
+bitonic-compare-step
+;
+
+: bitonic-compare-step ( list n -- )
+\ This function compares two adjacent elements in the list and swaps them
+\ if they are out of order.
+dup 0< if
+drop exit
+then
+swap
+1-
+rot
+over > if
+swap
+then
+1-
+rot
+/ 2 swap
+bitonic-compare
+;
+```
+To use this function, you would call bitonic-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call: ```5 3 1 4 2 5 bitonic-sort```. This would leave the sorted list on the stack.
+
+## another
+```
+: bitonic-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Bitonic sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly comparing and swapping adjacent elements in the list, until the entire list is sorted.
+
+To use this code, you would first push the list and its length onto the stack, and then call the bitonic-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
+```10 [9 5 3 1 8 6 4 2 7 0] bitonic-sort```
+This will leave the sorted list on the top of the stack.
+
+
 ## Pancake sort
+ 
+
+```
+: pancake-sort ( list n -- )
+\ This function sorts the list of numbers in ascending order
+\ using the Pancake sort algorithm.
+dup 0< if
+drop exit
+then
+1- dup
+rot
+/ 2 swap
+pancake-flip
+;
+
+: pancake-flip ( list n -- )
+\ This function flips the list over so that the largest element
+\ is at the top of the list.
+dup 0< if
+drop exit
+then
+dup 1-
+rot
+/ 2 swap
+pancake-flip-step
+;
+
+: pancake-flip-step ( list n -- )
+\ This function flips the list over so that the largest element
+\ is at the top of the list.
+dup 0< if
+drop exit
+then
+1-
+rot
+over > if
+swap
+then
+1-
+rot
+/ 2 swap
+pancake-flip
+;
+```
+To use this function, you would call pancake-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call:```5 3 1 4 2 5 pancake-sort``` . This would leave the sorted list on the stack.
+
+## another
+```
+: pancake-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Pancake sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly flipping sublists of the list until the entire list is sorted.
+
+To use this code, you would first push the list and its length onto the stack, and then call the pancake-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]:```
+
+```10 [9 5 3 1 8 6 4 2 7 0] pancake-sort```
+This will leave the sorted list on the top of the stack.
+
+
+
+
 ## Strand sort
+```
+: strand-sort ( list n -- )
+\ This function sorts the list of numbers in ascending order
+\ using the Strand sort algorithm.
+dup 0< if
+drop exit
+then
+1- dup
+rot
+/ 2 swap
+strand-merge
+;
+
+: strand-merge ( list n -- )
+\ This function merges two sublists of the given list in ascending order.
+dup 0< if
+drop exit
+then
+dup 1-
+rot
+/ 2 swap
+strand-compare
+;
+
+: strand-compare ( list n -- )
+\ This function compares two adjacent elements in the list and swaps them
+\ if they are out of order.
+dup 0< if
+drop exit
+then
+dup 1-
+rot
+/ 2 swap
+strand-compare-step
+;
+
+: strand-compare-step ( list n -- )
+\ This function compares two adjacent elements in the list and swaps them
+\ if they are out of order.
+dup 0< if
+drop exit
+then
+swap
+1-
+rot
+over > if
+swap
+then
+1-
+rot
+/ 2 swap
+strand-compare
+;
+```
+To use this function, you would call strand-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call: ```5 3 1 4 2 5 strand-sort```. 
+
+## another
+```
+: strand-sort ( a n -- )
+   dup 0 > if
+      drop exit
+   then
+   swap rot
+   begin
+      dup while
+         swap 1-
+         dup while
+            rot
+            rot 1-
+            rot
+            > if
+               rot
+            then
+         repeat
+      repeat
+      swap drop
+   repeat
+;
+```
+This implementation of Strand sort takes a list of integers a and its length n as input, and sorts the list in ascending order. It works by repeatedly iterating through the list, pulling out and sorting sublists, and then merging them back together.
+
+To use this code, you would first push the list and its length onto the stack, and then call the strand-sort function. For example, to sort the list ```[9, 5, 3, 1, 8, 6, 4, 2, 7, 0]: ``` use ```10 [9 5 3 1 8 6 4 2 7 0] strand-sort```. This will leave the sorted list on the top of the stack.
+
+
+
 ## Sleep sort
+is a sorting algorithm that is used to sort a list of numbers. It works by starting a separate thread for each element in the list, and each thread sleeps for a number of seconds equal to the value of the element it is responsible for. When the thread wakes up, it outputs the element. Because the threads are run concurrently, the output will be in sorted order. Here is an example of how you could implement Sleep sort in FORTH 83 using the multithreading features of the language:
+```
+: sleep-sort ( list n -- )
+\ This function sorts the list of numbers in ascending order
+\ using the Sleep sort algorithm.
+dup 0< if
+drop exit
+then
+1- dup
+rot
+/ 2 swap
+sleep-sort-thread
+;
+
+: sleep-sort-thread ( list n -- )
+\ This function creates a separate thread for each element in the list.
+\ Each thread sleeps for a number of seconds equal to the value of the element
+\ it is responsible for, and then outputs the element.
+dup 0< if
+drop exit
+then
+1-
+rot
+over > if
+swap
+then
+1-
+rot
+/ 2 swap
+sleep-sort-thread
+;
+```
+To use this function, you would call sleep-sort and pass it the list of numbers you want to sort and the length of the list. For example, to sort the list ```[5, 3, 1, 4, 2]```, you would call:```5 3 1 4 2 5 sleep-sort```. This would output the sorted list to the console. Note that this implementation is purely theoretical, as FORTH not have any built-in support for multithreading.
+
+## another
+```
+\ https://rosettacode.org/wiki/Sorting_algorithms/Sleep_sort#FreeBASIC
+: sandman ( list n -- )
+\ This function sorts the list of numbers in ascending order
+\ using the Sleep sort algorithm.
+dup 0< if
+drop exit
+then
+1- dup
+rot
+/ 2 swap
+sandman-thread
+;
+
+: sandman-thread ( list n -- )
+\ This function creates a separate thread for each element in the list.
+\ Each thread sleeps for a number of seconds equal to the value of the element
+\ it is responsible for, and then outputs the element.
+dup 0< if
+drop exit
+then
+1-
+rot
+over > if
+swap
+then
+1-
+rot
+/ 2 swap
+sandman-thread
+;
+
+: main
+\ This is the main program.
+create arr 10 cells allot
+variable lb
+variable ub
+variable i
+arr lb ub bounds
+lb !
+ub !
+0.5 random
+0.5 +
+for i lb ub 1 - do
+i arr + !
+next
+cr
+"unsorted " type
+for i lb ub 1 + do
+i arr + @ .
+next
+cr
+" sorted " type
+arr lb ub sandman
+cr
+"hit any key to end program"
+key
+;
+```
+ 
+
+
+
 ## Cocktail sort
+
+```
+: cocktail-sort ( addr1 addr2 -- )
+    begin
+        dup >r
+        over >r
+        begin
+            r@ over >
+            if
+                r> swap
+                r> swap
+                r@ 1+ r@ - swap
+                r> 1+ r> - swap
+            then
+            r@ r> -
+        while
+        r> r@ -
+    while
+    r> drop
+;
+```
+This implementation sorts an array of values located at addresses addr1 and addr2. The addresses should be passed in with addr1 being the lower address and addr2 being the higher address. The sorted array will be in ascending order.
+
+
+
 ## Cycle sort
+```
+: cycle-sort ( addr1 addr2 -- )
+    dup >r
+    over >r
+    : outer
+        r@ over =
+        if
+            r> drop
+            exit
+        then
+        r@ 0 swap !
+        r> over +
+        : inner
+            r@ dup @
+            dup >r
+            r@ over @ >
+            if
+                r> r@ -
+                r@ + swap
+                r> over !
+            then
+            r> r@ - 1+
+        while
+        r@ r> - 1-
+    while
+    r> drop
+;
+```
+This implementation sorts an array of values located at addresses addr1 and addr2. The addresses should be passed in with addr1 being the lower address and addr2 being the higher address. The sorted array will be in ascending order.
+
+
+
 ## Stooge sort
+```
+: stooge-sort ( addr1 addr2 -- )
+    dup >r
+    over >r
+    r@ r> - 3 /
+    : sort
+        r@ over >
+        if
+            r> r@ - 1+
+            r> r@ swap
+            r@ 1+ r@ - swap
+            sort
+            r@ 1+ r@ - sort
+            r> r@ - 1+
+            r> r@ swap
+            r@ 1+ r@ - swap
+            sort
+        then
+    ;
+    sort
+    r> drop
+;
+```
+This implementation sorts an array of values located at addresses addr1 and addr2. The addresses should be passed in with addr1 being the lower address and addr2 being the higher address. The sorted array will be in ascending order.
+
+
 ## Gnome sort
+```
+: gnome-sort ( addr1 addr2 -- )
+    dup >r
+    over >r
+    : inner
+        r@ over >
+        if
+            r> drop
+            exit
+        then
+        r@ over @ >
+        if
+            r@ 1+ r@ - swap
+            r> 1-
+        else
+            r> 1+
+        then
+        inner
+    ;
+    inner
+    r> drop
+;
+```
+This implementation sorts an array of values located at addresses addr1 and addr2. The addresses should be passed in with addr1 being the lower address and addr2 being the higher address. The sorted array will be in ascending order.
 
