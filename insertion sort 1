@@ -1,0 +1,184 @@
+// insertion sort 1 
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main insertion sort implementation
+:I                      // I for Insertion sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    1 i!              // start from second element
+    n (               // for each position
+        /i i!         // save current index
+        a i ? k!      // key = a[i]
+        i 1 - j!      // j = i-1
+        
+        // Move elements greater than key
+        /U (          // unlimited loop
+            j 0 >= k a j ? < & /W  // while j>=0 and key < a[j]
+            a j ? a j 1 + ?!      // move element right
+            j 1 - j!              // j--
+        )
+        
+        k a j 1 + ?!  // place key in correct position
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic array
+    [ 5 4 3 2 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 3 2 1 4 3 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Nearly sorted
+    [ 1 3 2 4 5 ] a!
+    `Test 5 - Nearly sorted` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+;
+
+// Performance test
+:R                      // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Test - 15 elements` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V
+;
+
+// Simple test
+:S                      // S for Simple test
+    [ 3 1 4 1 5 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V
+;
+
+// Binary insertion sort variant
+:B                      // B for Binary insertion
+    a /S n!            // get array size
+    1 i!              // start from second element
+    n (               // for each position
+        /i i!         // save current index
+        a i ? k!      // key = current element
+        
+        // Binary search for insertion point
+        0 l!          // left = 0
+        i 1 - r!      // right = i-1
+        
+        /U (          // binary search loop
+            l r <= /W // while left <= right
+            l r + 2 / m!  // mid = (left + right) / 2
+            k a m ? < (   // if key < a[mid]
+                m 1 - r!  // right = mid - 1
+            ) /E (
+                m 1 + l!  // left = mid + 1
+            )
+        )
+        
+        // Move elements and insert
+        i 1 - j!      // j = i-1
+        j l >= (      // if insertion point found
+            j l >= (  // while j >= left
+                a j ? a j 1 + ?!  // shift right
+                j 1 - j!          // j--
+            )
+        )
+        k a l ?!     // insert key
+    )
+;
+
+// Comparison of normal vs binary insertion sort
+:C                      // C for Compare sorts
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Normal Insertion Sort` /N
+    D
+    I
+    D /N
+    
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Binary Insertion Sort` /N
+    D
+    B
+    D /N
+;
