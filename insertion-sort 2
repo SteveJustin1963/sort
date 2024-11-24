@@ -1,0 +1,193 @@
+// insertion-sort 2
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main insertion sort
+:I                      // I for Insertion sort
+    a /S n!            // get array size
+    n 0 <= (           // if size <= 0
+        `Invalid array size` /N
+        /T             // exit
+    )
+    
+    1 i!              // start from second element
+    /U (              // unlimited loop
+        i n >= /W     // while i < n
+        
+        // Insert current element into sorted portion
+        i j!          // j = i
+        /U (          // inner loop
+            j 0 > /W  // while j > 0
+            j 1 - k!  // k = j-1
+            a j ? a k ? < ( // if current < previous
+                j i! k j!   // prepare swap
+                W          // swap elements
+                k j!      // restore j
+            ) /E (
+                /T      // exit inner loop
+            )
+            j 1 - j!   // j--
+        )
+        i 1 + i!      // move to next element
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Original test case
+    [ 9 5 3 1 8 6 4 2 7 0 ] a!
+    `Test 1 - Original test case` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 0 1 2 3 4 5 6 7 8 9 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 3 1 4 1 5 9 2 6 5 3 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Small array
+    [ 3 1 4 ] a!
+    `Test 5 - Small array` /N
+    `Before:` /N
+    D
+    I
+    `After:` /N
+    D
+    V /N
+;
+
+// Performance analysis
+:P                      // P for Performance
+    0 k!               // initialize swap counter
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Performance Test` /N
+    `Before:` /N
+    D
+    
+    // Modified sort with counting
+    1 i!              
+    /U (              
+        i n >= /W     
+        i j!          
+        /U (          
+            j 0 > /W  
+            j 1 - t!  
+            a j ? a t ? < (
+                j i! t j!
+                W
+                k 1 + k!   // count swap
+                t j!
+            ) /E (
+                /T
+            )
+            j 1 - j!
+        )
+        i 1 + i!
+    )
+    
+    `After:` /N
+    D
+    `Total swaps: ` k . /N
+;
+
+// Optimized version for nearly sorted arrays
+:O                      // O for Optimized
+    a /S n!
+    1 i!
+    /U (
+        i n >= /W
+        i j!
+        a j ? k!      // store current element
+        
+        // Early exit if already in position
+        j 0 > a j 1 - ? k > & /F = (
+            /U (
+                j 0 > /W
+                j 1 - t!
+                k a t ? < (
+                    a t ? a j ?!
+                    j 1 - j!
+                ) /E (
+                    /T
+                )
+            )
+            k a j ?!
+        )
+        i 1 + i!
+    )
+;
+
+// Compare standard vs optimized version
+:C                      // C for Compare
+    // Nearly sorted array
+    [ 1 2 4 3 5 6 7 8 9 10 ] a!
+    `Standard Sort` /N
+    D
+    I
+    D /N
+    
+    [ 1 2 4 3 5 6 7 8 9 10 ] a!
+    `Optimized Sort` /N
+    D
+    O
+    D /N
+;
