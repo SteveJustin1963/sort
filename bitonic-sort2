@@ -1,4 +1,5 @@
 // bitonic-sort2 
+// https://en.wikipedia.org/wiki/Bitonic_sorter
 // Initialize variables
 0 n! 0 i! 0 j! 0 t! 0 k!
 
