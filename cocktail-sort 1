@@ -1,4 +1,5 @@
 // cocktail-sort 1
+// https://en.wikipedia.org/wiki/Cocktail_shaker_sort
 // Initialize variables
 0 n! 0 i! 0 j! 0 t! 0 s! 0 f! 0 l! 0 r!
 
