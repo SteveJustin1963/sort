@@ -1,0 +1,200 @@
+// merge-sort 2
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 0 m!
+
+// Helper function to merge two sorted sections
+:M                      // M for Merge
+    i!                 // start index
+    j!                 // middle index
+    k!                 // end index
+    
+    // Create temp array
+    [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] b!
+    
+    i p!              // left pointer
+    j q!              // right pointer
+    i t!              // temp array index
+    
+    // Merge while elements in both arrays
+    /U (
+        p j < q k < & /W   // while elements remain in both parts
+        a p ? a q ? <= (   // if left <= right
+            a p ? b t ?!   // copy from left
+            p 1 + p!       // p++
+        ) /E (
+            a q ? b t ?!   // copy from right
+            q 1 + q!       // q++
+        )
+        t 1 + t!          // t++
+    )
+    
+    // Copy remaining left elements
+    /U (
+        p j < /W          // while elements remain in left
+        a p ? b t ?!      // copy element
+        p 1 + p!          // p++
+        t 1 + t!          // t++
+    )
+    
+    // Copy remaining right elements
+    /U (
+        q k < /W          // while elements remain in right
+        a q ? b t ?!      // copy element
+        q 1 + q!          // q++
+        t 1 + t!          // t++
+    )
+    
+    // Copy back to original array
+    i t!                  // reset temp index
+    /U (
+        t k < /W          // while elements to copy
+        b t i - ? a t ?!  // copy back
+        t 1 + t!          // t++
+    )
+;
+
+// Main merge sort function
+:S                      // S for Sort
+    j!                 // end index
+    i!                 // start index
+    
+    j i - 1 > (       // if section size > 1
+        i j + 2 / k!   // k = mid point
+        i k S         // sort left half
+        k j S         // sort right half
+        i k j M       // merge halves
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Main entry point
+:R                      // R for Run
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    0 n S             // sort entire array
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original test case
+    [ 9 5 3 1 8 6 4 2 7 0 ] a!
+    `Test 1 - Original case` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 0 1 2 3 4 5 6 7 8 9 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Test 3 - Reversed` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 5 2 7 2 8 1 7 3 5 2 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Odd length
+    [ 7 3 9 1 5 ] a!
+    `Test 5 - Odd length` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+;
+
+// Hybrid version for better performance
+:H                      // H for Hybrid sort
+    j!                 // end index
+    i!                 // start index
+    
+    // Use insertion sort for small arrays
+    j i - 10 < (      // if section <= 10 elements
+        i 1 + p!      // start from second element
+        /U (          // insertion sort loop
+            p j < /W  // while elements remain
+            p q!      // save current index
+            a q ? t!  // save current value
+            /U (      // find insertion point
+                q i > t a q 1 - ? < & /W
+                a q 1 - ? a q ?!  // shift right
+                q 1 - q!
+            )
+            t a q ?!  // insert value
+            p 1 + p!  // move to next element
+        )
+    ) /E (           // else use merge sort
+        i j + 2 / k!  // find midpoint
+        i k H        // sort left half
+        k j H        // sort right half
+        i k j M      // merge halves
+    )
+;
+
+// Performance comparison
+:P                      // P for Performance
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Standard Merge Sort` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D /N
+    
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Hybrid Sort` /N
+    `Before:` /N
+    D
+    H
+    `After:` /N
+    D /N
+;
