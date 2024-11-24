@@ -1,0 +1,201 @@
+// shell sort 1 
+
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 g! 0 t!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main shell sort implementation
+:S                      // S for Shell sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    // Initialize gap with Knuth sequence
+    1 g!              // gap = 1
+    /U (              // find largest gap
+        g 3 * 1 + " n < /W
+        g 3 * 1 + g!
+    )
+    
+    // Main shell sort loop
+    /U (              // unlimited loop
+        g 1 >= /W     // while gap >= 1
+        
+        // Sort subarrays with current gap
+        g i!          // start from gap
+        n (           // for each position
+            /i j!     // j = current position
+            a j ? t!  // temp = current element
+            
+            // Insertion sort with gap
+            /U (      // inner loop
+                j g >= a j g - ? t > & /W  // while can insert
+                a j g - ? a j ?!          // shift element
+                j g - j!                   // j -= gap
+            )
+            t a j ?!  // place temp
+        )
+        
+        g 3 / g!     // reduce gap
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original example
+    [ 10 7 8 5 6 ] a!
+    `Test 1 - Original test case` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 6 7 8 9 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 4 2 1 4 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Large gaps
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 5 - Large gaps` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+;
+
+// Visualization helper
+:Z                      // Z for viZualize
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Shell Sort Visualization` /N
+    `Initial array:` /N
+    D
+    
+    // Initialize gap
+    1 g!
+    /U (
+        g 3 * 1 + " n < /W
+        g 3 * 1 + g!
+    )
+    
+    // Main sort with visualization
+    /U (
+        g 1 >= /W
+        `Gap = ` g . /N
+        
+        g i!
+        n (
+            /i j!
+            a j ? t!
+            /U (
+                j g >= a j g - ? t > & /W
+                a j g - ? a j ?!
+                j g - j!
+            )
+            t a j ?!
+            `Current: ` D
+        )
+        
+        g 3 / g!
+    )
+    
+    `Final array:` /N
+    D
+;
+
+// Performance analysis
+:P                      // P for Performance
+    0 k!               // initialize swap counter
+    [ 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Analysis` /N
+    `Initial array:` /N
+    D
+    
+    // Modified sort with counting
+    1 g!
+    /U (
+        g 3 * 1 + " n < /W
+        g 3 * 1 + g!
+    )
+    
+    /U (
+        g 1 >= /W
+        g i!
+        n (
+            /i j!
+            a j ? t!
+            /U (
+                j g >= a j g - ? t > & /W
+                a j g - ? a j ?!
+                k 1 + k!      // count swap
+                j g - j!
+            )
+            t a j ?!
+        )
+        g 3 / g!
+    )
+    
+    `Final array:` /N
+    D
+    `Total swaps: ` k . /N
+;
