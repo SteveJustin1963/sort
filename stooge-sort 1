@@ -1,4 +1,5 @@
 // stooge-sort 1
+// https://en.wikipedia.org/wiki/Stooge_sort
 // Initialize variables
 0 n! 0 i! 0 j! 0 k! 0 t! 0 l! 0 r!
 
