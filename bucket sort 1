@@ -1,4 +1,5 @@
 // bucket sort 1
+// https://en.wikipedia.org/wiki/Bucket_sort
 // Initialize variables for buckets and counters
 0 n! 0 i! 0 j! 0 k! 0 t! 0 v! 0 m!
 
