@@ -1,0 +1,162 @@
+// sleep-sort 1 
+
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 c!
+
+// Helper function to count delay
+:D                      // D for Delay simulation
+    n!                 // number of iterations
+    n (               // simulate delay proportional to value
+        i 1 + i!      // increment counter
+    )
+;
+
+// Helper function to simulate thread
+:T                      // T for Thread simulation
+    n!                 // value to process
+    i!                 // thread ID
+    
+    // Simulate thread execution
+    `Thread ` i . ` processing ` n . /N
+    n 100 * D         // simulate delay proportional to value
+    n b i ?!          // store in output array
+    c 1 + c!          // increment completion counter
+;
+
+// Main sleep sort implementation
+:S                      // S for Sleep sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    // Initialize output array
+    [ 0 0 0 0 0 0 0 0 0 0 ] b!
+    
+    // Reset counters
+    0 c!              // completion counter
+    0 i!              // thread counter
+    
+    `Starting sleep sort simulation...` /N
+    
+    // Start "threads"
+    n (               // for each element
+        /i i!         // get current index
+        a i ? n!      // get value
+        `Launching thread for ` n . /N
+        i n T        // simulate thread
+    )
+    
+    `All threads completed` /N
+    
+    // Copy sorted result back to input array
+    n (              // for each position
+        /i i!        // get current index
+        b i ? a i ?! // copy to original array
+    )
+;
+
+// Print array helper
+:P                      // P for Print
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test function with multiple cases
+:R                      // R for Run tests
+    // Test 1: Original example
+    [ 5 3 1 4 2 ] a!
+    `Test 1 - Original example` /N
+    `Before:` /N
+    P
+    S
+    `After:` /N
+    P
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    P
+    S
+    `After:` /N
+    P
+    V /N
+
+    // Test 3: Reversed
+    [ 5 4 3 2 1 ] a!
+    `Test 3 - Reversed` /N
+    `Before:` /N
+    P
+    S
+    `After:` /N
+    P
+    V /N
+;
+
+// Visualization with timing display
+:Z                      // Z for viZualize
+    [ 4 2 1 3 ] a!
+    `Sleep Sort Visualization` /N
+    `Initial array:` /N
+    P
+    
+    // Reset counters
+    0 c!
+    0 t!
+    
+    `Starting threads...` /N
+    
+    // Visual simulation
+    n (
+        /i i!
+        a i ? n!
+        `Thread ` i . `: Sleeping for ` n . ` units` /N
+        i n T
+        `Thread ` i . `: Completed, value ` n . ` placed` /N
+        P
+    )
+    
+    `Final array:` /N
+    P
+;
+
+// Educational demonstration
+:E                      // E for Educate
+    `Sleep Sort Explanation` /N
+    `-------------------` /N
+    `Sleep Sort is a theoretical sorting algorithm that:` /N
+    `1. Creates a thread for each number` /N
+    `2. Each thread sleeps for time proportional to its number` /N
+    `3. Upon waking, threads output their numbers in sequence` /N
+    `4. The result is naturally sorted by sleep duration` /N
+    /N
+    `This implementation simulates the concept since` /N
+    `MINT2 doesn't support actual multithreading.` /N
+    /N
+    `Let's demonstrate with a small array:` /N
+    
+    [ 3 1 4 2 ] a!
+    P
+    S
+    P
+;
