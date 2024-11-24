@@ -1,0 +1,204 @@
+// merge sort 1
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 l! 0 r! 0 m!
+
+// Merge two sorted arrays
+:M                      // M for Merge
+    l!                 // left index
+    r!                 // right index
+    m!                 // middle index
+    
+    // Create temporary arrays
+    [ 0 0 0 0 0 0 0 0 0 0 ] b! // left array
+    [ 0 0 0 0 0 0 0 0 0 0 ] c! // right array
+    
+    // Copy data to temp arrays
+    m l - (            // copy left half
+        /i i!
+        a l i + ? b i ?!
+    )
+    
+    r m - (            // copy right half
+        /i i!
+        a m i + ? c i ?!
+    )
+    
+    // Merge back to main array
+    0 i!               // left array index
+    0 j!               // right array index
+    l k!               // main array index
+    
+    /U (              // merge loop
+        i m l - < j r m - < & /W  // while elements remain
+        b i ? c j ? <= (  // if left <= right
+            b i ? a k ?!  // copy from left
+            i 1 + i!      // i++
+        ) /E (           // else
+            c j ? a k ?!  // copy from right
+            j 1 + j!      // j++
+        )
+        k 1 + k!         // k++
+    )
+    
+    // Copy remaining elements
+    i m l - < (        // copy remaining left
+        /U (
+            i m l - < /W
+            b i ? a k ?!
+            i 1 + i!
+            k 1 + k!
+        )
+    )
+    
+    j r m - < (        // copy remaining right
+        /U (
+            j r m - < /W
+            c j ? a k ?!
+            j 1 + j!
+            k 1 + k!
+        )
+    )
+;
+
+// Main merge sort function
+:S                      // S for Sort
+    l!                 // left index
+    r!                 // right index
+    
+    r l > (           // if array section > 1
+        l r + 2 / m!  // calculate middle
+        
+        // Sort first and second halves
+        l m S         // sort left half
+        m r S         // sort right half
+        
+        // Merge the sorted halves
+        l r m M
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Main entry point for sorting
+:R                      // R for Run sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    0 n 1 - S         // sort entire array
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Original test case
+    [ 10 7 8 5 6 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 3 1 4 1 5 9 2 6 5 3 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Power of 2 length
+    [ 8 4 2 1 6 3 7 5 ] a!
+    `Test 5 - Power of 2 length` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V /N
+;
+
+// Performance test
+:P                      // P for Performance
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Test - 15 elements` /N
+    `Before:` /N
+    D
+    R
+    `After:` /N
+    D
+    V
+;
+
+// Optimized version for small arrays
+:O                      // O for Optimized
+    l!                 // left index
+    r!                 // right index
+    
+    r l - 10 < (      // if small array
+        // Use insertion sort
+        l 1 + i!      // start from second element
+        /U (
+            i r <= /W 
+            i j!
+            /U (
+                j l > a j ? a j 1 - ? < & /W
+                a j 1 - ? a j ?!
+                j 1 - j!
+            )
+            a j 1 + ? a j ?!
+            i 1 + i!
+        )
+    ) /E (
+        // Use merge sort
+        l r + 2 / m!
+        l m O
+        m r O
+        l r m M
+    )
+;
