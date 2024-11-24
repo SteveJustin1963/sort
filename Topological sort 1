@@ -1,0 +1,238 @@
+// Topological sort 1
+// https://en.wikipedia.org/wiki/Topological_sorting
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t!
+
+// Graph representation using adjacency matrix
+[ 0 0 0 0 0 0 0 0 0 0 ] m! // matrix for edges
+[ 0 0 0 0 0 0 0 0 0 0 ] d! // indegree array
+[ 0 0 0 0 0 0 0 0 0 0 ] r! // result array
+
+// Calculate indegrees
+:I                      // I for Indegree
+    0 k!              // vertex counter
+    n (               // for each vertex
+        0 t!          // reset count
+        n (           // check all vertices
+            /i i!     // current vertex
+            m i n k * + ? 1 = ( // if edge exists
+                t 1 + t!       // increment count
+            ) '
+        )
+        t d k ?!     // store indegree
+        k 1 + k!     // next vertex
+    )
+;
+
+// Main topological sort
+:S                      // S for Sort
+    n!                 // number of vertices
+    
+    // Calculate initial indegrees
+    I
+    
+    // Initialize result index
+    0 k!              // result position
+    
+    // Main sorting loop
+    n (               // for each vertex
+        // Find vertex with 0 indegree
+        -1 t!        // no vertex found
+        n (          // check all vertices
+            /i i!    // current vertex
+            d i ? 0 = ( // if indegree is 0
+                t -1 = ( // if first found
+                    i t!  // save vertex
+                ) '
+            ) '
+        )
+        
+        // If no vertex found, graph has cycle
+        t -1 = (
+            `Graph has cycle` /N
+            /T        // exit
+        )
+        
+        // Add vertex to result
+        t r k ?!     // store in result
+        k 1 + k!     // increment result position
+        -1 d t ?!    // mark as processed
+        
+        // Update indegrees
+        n (          // for each vertex
+            /i i!    // current vertex
+            m t n * i + ? 1 = ( // if edge exists
+                d i ? 1 - d i ?!  // decrease indegree
+            ) '
+        )
+    )
+;
+
+// Print graph helper
+:G                      // G for Graph
+    `Graph adjacency matrix:` /N
+    n (                // for each row
+        /i i!
+        n (           // for each column
+            /j j!
+            m i n * j + ? .
+            ` `
+        ) /N
+    )
+;
+
+// Print result helper
+:D                      // D for Display
+    `Topological order:` /N
+    n (               // for each vertex
+        r /i ? .      // print vertex
+        ` `          // space
+    ) /N
+;
+
+// Add edge to graph
+:E                      // E for Edge
+    j!                // to vertex
+    i!                // from vertex
+    1 m i n * j + ?!  // set edge
+;
+
+// Verify result helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    n 1 - (           // check each pair
+        /i i!         // current position
+        r i ? t!      // current vertex
+        r i 1 + ? j!  // next vertex
+        m t n * j + ? 1 = ( // if edge exists wrong way
+            `Sort failed: edge from ` j . ` to ` t . /N
+            /T        // exit
+        ) '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Simple DAG
+    5 n!              // 5 vertices
+    0 1 E             // Add edges
+    1 2 E
+    2 3 E
+    1 3 E
+    3 4 E
+    `Test 1 - Simple DAG` /N
+    G
+    S
+    D
+    V /N
+
+    // Test 2: Empty graph
+    3 n!
+    `Test 2 - Empty graph` /N
+    G
+    S
+    D
+    V /N
+
+    // Test 3: Linear graph
+    4 n!
+    0 1 E
+    1 2 E
+    2 3 E
+    `Test 3 - Linear graph` /N
+    G
+    S
+    D
+    V /N
+
+    // Test 4: Tree-like graph
+    6 n!
+    0 1 E
+    0 2 E
+    1 3 E
+    1 4 E
+    2 5 E
+    `Test 4 - Tree-like graph` /N
+    G
+    S
+    D
+    V /N
+;
+
+// Visualization 
+:Z                      // Z for viZualize
+    `Topological Sort Visualization` /N
+    4 n!              // 4 vertices
+    0 1 E             // Add edges
+    1 2 E
+    2 3 E
+    1 3 E
+    
+    `Initial graph:` /N
+    G
+    
+    `Initial indegrees:` /N
+    I
+    n (
+        /i i!
+        `Vertex ` i . `: ` d i ? . /N
+    )
+    
+    // Sorting with visualization
+    0 k!              // result position
+    n (
+        `Step ` /i . `:` /N
+        
+        // Find zero indegree
+        -1 t!
+        n (
+            /i i!
+            d i ? 0 = (
+                t -1 = (
+                    i t!
+                ) '
+            ) '
+        )
+        
+        `Selected vertex ` t . /N
+        t r k ?!
+        k 1 + k!
+        -1 d t ?!
+        
+        // Update indegrees
+        n (
+            /i i!
+            m t n * i + ? 1 = (
+                d i ? 1 - d i ?!
+                `Updated indegree of ` i . ` to ` d i ? . /N
+            ) '
+        )
+        
+        `Current order: `
+        k (
+            r /i ? .
+            ` `
+        ) /N
+    )
+;
+
+// Educational component
+:Q                      // Q for eduQation
+    `Topological Sort Algorithm` /N
+    `------------------------` /N
+    `Used to order vertices in a directed acyclic graph (DAG)` /N
+    `such that for each edge u->v, u comes before v` /N
+    /N
+    `Algorithm steps:` /N
+    `1. Calculate indegrees for all vertices` /N
+    `2. Find vertex with indegree 0` /N
+    `3. Add to result and remove from graph` /N
+    `4. Update indegrees` /N
+    `5. Repeat until all vertices processed` /N
+    /N
+    `Applications:` /N
+    `- Task scheduling` /N
+    `- Build systems` /N
+    `- Course prerequisites` /N
+;
