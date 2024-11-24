@@ -1,0 +1,191 @@
+// partition sort 1
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 p! 0 l! 0 r! 0 t!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Partition function
+:P                      // P for Partition
+    r!                 // right bound
+    l!                 // left bound
+    
+    // Choose pivot (median of three)
+    l a l ? k!         // left element
+    r a r ? m!         // right element
+    l r + 2 / a ? n!   // middle element
+    
+    // Sort k, m, n and use median as pivot
+    k m > ( k t! m k! t m! )
+    k n > ( k t! n k! t n! )
+    m n > ( m t! n m! t n! )
+    m p!               // median is pivot
+    
+    l i!              // i = left
+    r j!              // j = right
+    
+    /U (              // unlimited loop
+        /U ( i j <= a i ? p < & /W i 1 + i! )  // scan from left
+        /U ( i j <= p a j ? < & /W j 1 - j! )  // scan from right
+        
+        i j <= (      // if bounds valid
+            i j W     // swap elements
+            i 1 + i!  // i++
+            j 1 - j!  // j--
+        )
+        
+        i j > /W     // exit when pointers cross
+    )
+    j                // return partition point
+;
+
+// Main quicksort function
+:Q                      // Q for Quicksort
+    r!                 // right bound
+    l!                 // left bound
+    
+    r l - 1 > (       // if range > 1
+        // Partition and recursively sort
+        l r P p!      // partition and save point
+        l p Q         // sort left half
+        p 1 + r Q     // sort right half
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Main entry point
+:S                      // S for Sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    0 n 1 - Q         // sort entire array
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original example
+    [ 10 7 8 5 6 ] a!
+    `Test 1 - Original test case` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 4 2 1 4 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Small array
+    [ 3 1 ] a!
+    `Test 5 - Small array` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+;
+
+// Visualization of partitioning
+:Z                      // Z for viZualize
+    [ 6 5 8 3 7 2 4 1 ] a!
+    `Quicksort Visualization` /N
+    `Initial:` /N
+    D
+    
+    0 n 1 - l! r!     // initialize bounds
+    /U (              // visualization loop
+        r l - 1 > /W  // while valid range
+        `Partition [` l . `,` r . `]` /N
+        l r P p!      // partition
+        `After partition:` /N
+        D
+        l p Q        // sort left
+        p 1 + r Q    // sort right
+    )
+    
+    `Final:` /N
+    D
+;
+
+// Optimized version with insertion sort for small arrays
+:O                      // O for Optimized
+    r!                 // right bound
+    l!                 // left bound
+    
+    // Use insertion sort for small subarrays
+    r l - 10 < (      // if subarray <= 10 elements
+        l 1 + i!      // start from second element
+        r 1 + (       // for each element
+            /i j!     // j = current
+            a j ? k!  // key = current element
+            j 1 - i!  // i = j-1
+            /U (      // find insertion point
+                i l >= k a i ? < & /W
+                a i ? a i 1 + ?!
+                i 1 - i!
+            )
+            k a i 1 + ?!
+        )
+    ) /E (           // else use quicksort
+        l r P p!     // partition
+        l p O        // sort left
+        p 1 + r O    // sort right
+    )
+;
