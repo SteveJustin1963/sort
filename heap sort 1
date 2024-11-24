@@ -1,4 +1,5 @@
-// heapify sort 1 
+// heap sort 1 
+// https://en.wikipedia.org/wiki/Heapsort
 // Initialize variables
 0 n! 0 i! 0 j! 0 t! 0 l! 0 r! 0 m!
 
