@@ -1,0 +1,231 @@
+// strand-sort 2
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 0 s! 0 m!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Extract ascending sequence
+:E                      // E for Extract
+    i s!              // start position
+    i 1 + j!          // next position
+    /U (              // unlimited loop
+        j n < /W      // while more elements
+        a j ? a j 1 - ? > /F = ( // if ascending
+            j 1 + j!  // continue sequence
+        ) /E (
+            /T       // end sequence
+        )
+    )
+    j m!             // save end position
+;
+
+// Merge two sorted sequences
+:M                      // M for Merge
+    [ 0 0 0 0 0 0 0 0 0 0 ] b! // temp array
+    0 k!              // result index
+    i p!              // first sequence start
+    j q!              // second sequence start
+    
+    // Merge while both sequences have elements
+    /U (
+        p m < q n < & /W
+        a p ? a q ? <= (
+            a p ? b k ?!
+            p 1 + p!
+        ) /E (
+            a q ? b k ?!
+            q 1 + q!
+        )
+        k 1 + k!
+    )
+    
+    // Copy remaining elements
+    /U (
+        p m < /W
+        a p ? b k ?!
+        p 1 + p!
+        k 1 + k!
+    )
+    
+    /U (
+        q n < /W
+        a q ? b k ?!
+        q 1 + q!
+        k 1 + k!
+    )
+    
+    // Copy back to original array
+    k (
+        /i j!
+        b j ? a j ?!
+    )
+;
+
+// Main strand sort
+:S                      // S for Sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    0 i!              // start position
+    /U (              // unlimited loop
+        i n < /W      // while elements remain
+        E            // extract sequence
+        i m < (      // if sequence found
+            M        // merge sequences
+        ) /E (
+            /T      // done
+        )
+        m i!        // update position
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original example
+    [ 9 5 3 1 8 6 4 2 7 0 ] a!
+    `Test 1 - Original example` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 0 1 2 3 4 5 6 7 8 9 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 5 2 5 2 1 5 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+;
+
+// Visualization of process
+:Z                      // Z for viZualize
+    [ 6 3 8 1 5 2 7 4 ] a!
+    `Strand Sort Visualization` /N
+    `Initial array:` /N
+    D
+    
+    0 i!
+    /U (
+        i n < /W
+        `Finding sequence starting at ` i . /N
+        E
+        `Found sequence from ` i . ` to ` m . /N
+        `Current sequence: ` 
+        i m (
+            a /i ? .
+            ` `
+        ) /N
+        
+        i m < (
+            `Merging sequences...` /N
+            M
+            `After merge:` /N
+            D
+        )
+        m i!
+    )
+    
+    `Final result:` /N
+    D
+;
+
+// Performance analysis
+:P                      // P for Performance
+    0 k!               // counter for operations
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Performance Analysis` /N
+    `Before:` /N
+    D
+    
+    0 i!
+    /U (
+        i n < /W
+        E
+        i m < (
+            M
+            k 1 + k!   // count merges
+        )
+        m i!
+    )
+    
+    `After:` /N
+    D
+    `Number of merges: ` k . /N
+;
+
+// Educational component
+:Q                      // Q for eduQation
+    `Strand Sort Algorithm Explanation` /N
+    `-----------------------------` /N
+    `Strand sort works by:` /N
+    `1. Finding natural ascending sequences (strands)` /N
+    `2. Merging these sequences efficiently` /N
+    `3. Repeating until the entire array is sorted` /N
+    /N
+    `Performance characteristics:` /N
+    `- Best case: O(n) - when nearly sorted` /N
+    `- Worst case: O(n²) - when reverse sorted` /N
+    `- Space complexity: O(n)` /N
+    /N
+    `Demonstration:` /N
+    [ 4 2 6 1 5 3 ] a!
+    D
+    S
+    D
+;
