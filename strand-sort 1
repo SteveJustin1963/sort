@@ -1,0 +1,228 @@
+// strand-sort 1
+
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 0 s! 0 m!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Extract strand from input
+:E                      // E for Extract strand
+    [ 0 0 0 0 0 0 0 0 0 0 ] b!  // temp array for strand
+    0 s!               // strand size
+    0 k!               // current position
+    
+    // Extract first increasing subsequence
+    /U (              // unlimited loop
+        k n < /W      // while elements remain
+        
+        s 0 = (       // if strand empty
+            a k ? b s ?!  // add first element
+            s 1 + s!     // increment strand size
+            k 1 + k!     // move to next
+        ) /E (
+            b s 1 - ? a k ? <= (  // if current fits sequence
+                a k ? b s ?!     // add to strand
+                s 1 + s!        // increment strand size
+                k 1 + k!        // move to next
+            ) /E (
+                /T            // exit loop
+            )
+        )
+    )
+    
+    // Remove extracted elements
+    k i!              // save end of strand
+    /U (             // shift remaining elements
+        i n < /W
+        a i ? a k i - ?!
+        i 1 + i!
+    )
+    n k - n!        // update size
+;
+
+// Merge two sorted arrays
+:M                      // M for Merge
+    [ 0 0 0 0 0 0 0 0 0 0 ] c!  // result array
+    0 i!              // first array index
+    0 j!              // second array index
+    0 k!              // result index
+    
+    // Merge while both arrays have elements
+    /U (
+        i s < j n < & /W  // while both have elements
+        b i ? a j ? <= (  // if b[i] <= a[j]
+            b i ? c k ?!  // take from b
+            i 1 + i!     // increment i
+        ) /E (
+            a j ? c k ?!  // take from a
+            j 1 + j!     // increment j
+        )
+        k 1 + k!        // increment result index
+    )
+    
+    // Copy remaining elements
+    /U (
+        i s < /W       // copy remaining from b
+        b i ? c k ?!
+        i 1 + i!
+        k 1 + k!
+    )
+    
+    /U (
+        j n < /W       // copy remaining from a
+        a j ? c k ?!
+        j 1 + j!
+        k 1 + k!
+    )
+    
+    // Copy result back to original array
+    k m!              // save total size
+    m (
+        /i i!
+        c i ? a i ?!
+    )
+    m n!             // update size
+;
+
+// Main strand sort
+:S                      // S for Strand sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    // Main sorting loop
+    [ 0 0 0 0 0 0 0 0 0 0 ] b!  // strand array
+    /U (              // unlimited loop
+        n 0 > /W      // while unsorted elements remain
+        E            // extract strand
+        s 0 > n 0 > & ( // if both parts have elements
+            M        // merge
+        ) /E (
+            /T      // done
+        )
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original example
+    [ 5 3 1 4 2 ] a!
+    `Test 1 - Original example` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 5 4 3 2 1 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 3 1 3 1 2 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+;
+
+// Visualization
+:Z                      // Z for viZualize
+    [ 5 2 4 1 3 ] a!
+    `Strand Sort Visualization` /N
+    `Initial array:` /N
+    D
+    
+    [ 0 0 0 0 0 0 0 0 0 0 ] b!
+    /U (
+        n 0 > /W
+        `Extracting strand...` /N
+        E
+        `Strand:` /N
+        s (
+            b /i ? .
+            ` `
+        ) /N
+        `Remaining:` /N
+        D
+        
+        s 0 > n 0 > & (
+            `Merging...` /N
+            M
+            `After merge:` /N
+            D
+        )
+    )
+    
+    `Final result:` /N
+    D
+;
+
+// Educational explanation
+:E                      // E for Educate
+    `Strand Sort Algorithm` /N
+    `--------------------` /N
+    `Strand sort works by:` /N
+    `1. Extracting sorted subsequences (strands)` /N
+    `2. Merging these strands with the remaining list` /N
+    `3. Repeating until all elements are sorted` /N
+    /N
+    `Best case: O(n) - already sorted` /N
+    `Average/Worst case: O(n²)` /N
+    /N
+    `Example with small array:` /N
+    [ 4 1 3 2 ] a!
+    D
+    S
+    D
+;
