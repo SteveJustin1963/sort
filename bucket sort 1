@@ -1,0 +1,128 @@
+// BUCKET-SORT ( a n -- )
+// Initialize variables for buckets and counters
+0 n! 0 i! 0 j! 0 k! 0 t! 0 v! 0 m!
+
+// Helper function to find max value in array
+:M                      // M for Max
+    a 0 ? m!           // initialize max with first element
+    a /S (             // loop through array
+        a /i ? " m     // get current value and compare with max
+        > (            // if current > max
+            m!         // update max
+        ) '           // drop otherwise
+    ) 
+;
+
+// Insertion sort for each bucket
+:I                      // I for Insertion sort
+    b /S 1 - n!        // get size-1
+    n (                // loop n times
+        b /i ? k!      // key = current element
+        /i 1 - j!      // j = i-1
+        /U (           // unlimited loop
+            j 0 >= k b j ? < & /W  // while j>=0 and key < b[j]
+            k b j 1 + ?!          // b[j+1] = key
+            j 1 - j!              // j--
+        )
+    )
+;
+
+// Create and initialize buckets
+:C                      // C for Create buckets
+    10 n!              // use 10 buckets
+    n (                // for each bucket
+        [ 0 0 0 0 0 0 0 0 0 0 ] // create empty bucket
+        /i n * v + s!  // store in buckets array starting at v
+    )
+;
+
+// Main bucket sort function
+:B                      // B for Bucket sort
+    M                  // find max value
+    v!                 // v = start of buckets memory
+    C                  // create buckets
+    
+    // Distribute elements to buckets
+    a /S (             // for each input element
+        a /i ? " m /   // scale to 0-9 range
+        #A * n!        // n = bucket number
+        n v + " /S j!  // j = current bucket size
+        a /i ? $ j ?!  // add element to bucket
+        j 1 + j!       // increment bucket size
+    )
+    
+    // Sort each bucket
+    n (                // for each bucket
+        /i v + b!      // b = current bucket
+        I              // sort bucket
+    )
+    
+    // Collect results
+    0 k!              // k = output index
+    n (               // for each bucket
+        /i v + b!     // b = current bucket
+        b /S (        // for each element in bucket
+            b /i ? a k ?!  // copy to output
+            k 1 + k!      // increment output index
+        )
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic case
+    [ 10 7 8 5 6 3 2 9 4 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 6 7 8 9 10 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 3: Reverse sorted
+    [ 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 4: Duplicates
+    [ 5 2 5 3 2 4 5 1 2 3 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+;
+
+// Simple test for verification
+:S                      // S for Simple test
+    [ 5 3 1 4 2 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D
+;
