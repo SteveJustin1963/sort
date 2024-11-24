@@ -1,57 +1,107 @@
-: bitonic-sort ( list n -- )
-\ This function sorts the list of numbers in ascending order
-\ using the Bitonic sort algorithm.
-dup 0< if
-drop exit
-then
-1- dup
-rot
-/ 2 swap
-bitonic-merge
+// bitonic-sort
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 
+
+// Helper function to swap array elements at positions i,j
+:W                    // W for sWap
+    a i ? t!          // temp = a[i]
+    a j ? a i ?!      // a[i] = a[j]
+    t a j ?!          // a[j] = temp
 ;
 
-: bitonic-merge ( list n -- )
-\ This function merges two sublists of the given list in ascending order.
-dup 0< if
-drop exit
-then
-dup 1-
-rot
-/ 2 swap
-bitonic-compare
+// Check if number is power of 2
+:P                    // P for Power of 2 check
+    " 1 - &          // n & (n-1)
+    0 =              // equals 0?
 ;
 
-: bitonic-compare ( list n -- )
-\ This function compares two adjacent elements in the list and swaps them
-\ if they are out of order.
-dup 0< if
-drop exit
-then
-dup 1-
-rot
-/ 2 swap
-bitonic-compare-step
+// Compare and swap function
+:C                    // C for Compare
+    i j < (           // if i < j
+        a i ? a j ?   // get elements
+        > (           // if a[i] > a[j]
+            i " k! j i! k j! // save i, swap i,j
+            W        // swap elements
+            k i! k ' // restore i, drop k
+        ) ' '       // drop comparison values
+    )
 ;
 
-: bitonic-compare-step ( list n -- )
-\ This function compares two adjacent elements in the list and swaps them
-\ if they are out of order.
-dup 0< if
-drop exit
-then
-swap
-1-
-rot
-over > if
-swap
-then
-1-
-rot
-/ 2 swap
-bitonic-compare
+// Bitonic merge
+:M                    // M for Merge
+    k 0 > (          // if k > 0
+        k { k!       // k = k/2 (shift left)
+        n (          // for n times
+            /i " i!  // i = current index
+            /i k +   // i + k
+            n < (    // if within bounds
+                j!   // j = i + k
+                C    // compare and swap
+            ) '     // drop if outside bounds
+        )
+        M           // recursive merge
+    )
 ;
-\\ To use this function, you would call bitonic-sort and pass it the list of numbers 
-\\ you want to sort and the length of the list. For example, to sort the 
-\\ list [5, 3, 1, 4, 2], you would call: 5 3 1 4 2 5 bitonic-sort. 
-\\ This would leave the sorted list on the stack.
 
+// Main bitonic sort
+:B                    // B for Bitonic sort
+    " /S n!          // get array size
+    n P /F = (       // if not power of 2
+        `Array size must be power of 2` /N
+        /T           // exit
+    )
+    n 1 > (          // if n > 1
+        n { k!       // k = n/2
+        n (          // for n times
+            /i " i!  // save current index
+            /i k < ( // if i < k
+                j!   // j = i + k
+                C    // compare and swap
+            ) '     // drop if not needed
+        )
+        M           // merge
+    )
+;
+
+// Print array
+:D                    // D for Display
+    `Array:` /N
+    a /S (           // for array size
+        a /i ? .     // print number
+        ` ` 
+    ) /N
+;
+
+// Test different array sizes
+:T                    // T for Test
+    // Test 1: Array size 4
+    [ 4 2 1 3 ] a!
+    `Test 1 - Size 4` /N
+    `Before:` /N D
+    B
+    `After:` /N D /N
+
+    // Test 2: Array size 8
+    [ 8 4 2 1 6 3 7 5 ] a!
+    `Test 2 - Size 8` /N
+    `Before:` /N D
+    B
+    `After:` /N D /N
+
+    // Test 3: Wrong size (not power of 2)
+    [ 3 1 4 5 2 ] a!
+    `Test 3 - Invalid size` /N
+    `Before:` /N D
+    B
+    `After:` /N D /N
+;
+
+// Performance test function
+:R                    // R for Random test
+    [ 8 6 7 5 3 0 9 1 ] a! // Initialize with random numbers
+    `Performance Test` /N
+    `Before:` /N D
+    `Sorting...` /N
+    B
+    `After:` /N D
+;
