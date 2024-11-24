@@ -1,0 +1,152 @@
+// cycle-sort 1
+
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 p! 0 c! 0 v!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Find position for value
+:F                      // F for Find position
+    p!                 // save item value
+    i!                 // save start position
+    i                 // initial position
+    a /S (            // loop through array
+        /i j!         // save current index
+        j i > (       // if after start position
+            a j ? p < ( // if current < item
+                c 1 + c! // increment position count
+            ) '
+        ) '
+    )
+    i c +            // return position
+;
+
+// Main cycle sort implementation
+:C                      // C for Cycle sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    0 i!              // start with first position
+    n 1 - (           // for each position
+        0 c!          // reset position counter
+        a i ? p!      // item = array[start]
+        
+        // Find correct position
+        i p F v!      // v = find_position(i, item)
+        
+        v i = /F = (  // if position != start
+            // Cycle sort
+            /U (       // unlimited loop
+                p t!   // save current item
+                a v ? p!  // item = array[pos]
+                t a v ?!  // array[pos] = temp
+                
+                0 c!      // reset counter
+                v p F v!  // find new position
+                
+                v i = /W  // while pos != start
+            )
+        )
+        i 1 + i!     // move to next position
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic array
+    [ 5 4 3 2 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D /N
+
+    // Test 4: With duplicates
+    [ 4 2 3 2 1 4 3 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D /N
+
+    // Test 5: Array with cycle
+    [ 5 1 4 2 3 ] a!
+    `Test 5 - Array with cycle` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D /N
+;
+
+// Performance test with larger array
+:R                      // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Test - 15 elements` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D
+;
+
+// Simple test
+:S                      // S for Simple test
+    [ 3 1 4 1 5 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    C
+    `After:` /N
+    D
+;
+
+// Verification test
+:V                      // V for Verify sort
+    a /S 1 - (         // loop through array
+        /i i!          // save current index
+        i 1 + j!       // next index
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` /i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
