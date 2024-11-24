@@ -1,5 +1,5 @@
+// sleep sort
 // https://rosettacode.org/wiki/Sorting_algorithms/Sleep_sort#FreeBASIC
-// Sandman 
 // Initialize variables
 0 n! 0 i! 0 j! 0 t! 0 s! 0 c!
 
