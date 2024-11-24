@@ -1,0 +1,121 @@
+// bitonic-sort2 
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 k!
+
+// Helper function to swap array elements
+:W                     // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main bitonic sort implementation
+:B                     // B for BitonicSort
+    n!                 // store size in n
+    n 0 > /F = (      // if n > 0
+        /T            // exit
+    )
+    n 1 - k!          // k = n-1
+    /U (              // unlimited loop
+        k 0 > /W      // while k > 0
+        k (           // loop k times
+            /i i!     // current index to i
+            i 1 + j!  // next index to j
+            a i ? a j ? // get values
+            > (       // if out of order
+                W     // swap them
+            ) ' '    // clean stack
+        )
+        k 1 - k!     // decrement k
+    )
+;
+
+// Print array helper
+:D                     // D for Display
+    `Array:` /N
+    a /S (            // loop through array
+        a /i ? .      // print each number
+        ` `          // space between numbers
+    ) /N
+;
+
+// Validate input size
+:V                     // V for Validate
+    a /S n!           // get array size
+    n 0 = (           // if size is 0
+        `Empty array` /N
+        /T            // exit
+    )
+    n 1 > /F = (      // if size <= 1
+        `Array too small` /N
+        /T            // exit
+    )
+;
+
+// Main test function
+:T                     // T for Test
+    // Test 1: Basic sort
+    [ 9 5 3 1 8 6 4 2 7 0 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    V                 // validate input
+    B                 // sort
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 0 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    V
+    B
+    `After:` /N
+    D /N
+
+    // Test 3: Reversed
+    [ 5 4 3 2 1 0 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    V
+    B
+    `After:` /N
+    D /N
+
+    // Test 4: Duplicates
+    [ 3 1 4 1 5 9 2 6 5 3 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    V
+    B
+    `After:` /N
+    D /N
+;
+
+// Performance test with larger array
+
+:R                     // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Performance Test - 16 elements` /N
+    `Before:` /N
+    D
+    V
+    B
+    `After:` /N
+    D
+;
+
+// Simple sort for small arrays
+:S                     // S for Simple sort
+    [ 5 4 3 2 1 ] a!
+    `Simple Test - 5 elements` /N
+    `Before:` /N
+    D
+    V
+    B
+    `After:` /N
+    D
+;
