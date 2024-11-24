@@ -1,0 +1,166 @@
+// heapify sort 1 
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 l! 0 r! 0 m!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Get left child index
+:L                      // L for Left child
+    2 * 1 +           // 2*i + 1
+;
+
+// Get right child index
+:R                      // R for Right child
+    2 * 2 +           // 2*i + 2
+;
+
+// Heapify function
+:H                      // H for Heapify
+    i!                 // root index
+    n!                 // heap size
+    i l!               // largest = i
+    
+    i L j!            // left = 2*i + 1
+    j n < (           // if left < heap size
+        a j ? a l ? > ( // if a[left] > a[largest]
+            j l!      // largest = left
+        ) ' '
+    ) '
+    
+    i R j!            // right = 2*i + 2
+    j n < (           // if right < heap size
+        a j ? a l ? > ( // if a[right] > a[largest]
+            j l!      // largest = right
+        ) ' '
+    ) '
+    
+    l i = /F = (      // if largest != i
+        i " j!        // save i
+        l i!          // i = largest
+        W            // swap elements
+        l j!         // restore j
+        H            // recursive heapify
+    )
+;
+
+// Build max heap
+:B                      // B for Build heap
+    n!                 // heap size
+    n 2 / 1 - i!      // start at n/2 - 1
+    /U (              // unlimited loop
+        i n H        // heapify
+        i 0 > /W     // while i > 0
+        i 1 - i!     // i--
+    )
+;
+
+// Main heap sort
+:S                      // S for Sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    n B               // build max heap
+    
+    n 1 - i!          // i = n-1
+    /U (              // unlimited loop
+        i 0 > /W      // while i > 0
+        0 j!          // root index
+        i " m!        // save i as max index
+        W            // swap root with last element
+        m n!         // new heap size
+        0 i!         // start at root
+        H            // heapify reduced heap
+        m i!         // restore i
+        i 1 - i!     // i--
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic array
+    [ 4 10 3 5 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 4: With duplicates
+    [ 4 2 3 2 1 4 3 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 5: Perfect binary tree size
+    [ 7 6 5 4 3 2 1 ] a!
+    `Test 5 - Perfect tree size` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+;
+
+// Performance test
+:R                      // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Test - 15 elements` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+;
+
+// Verification helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
