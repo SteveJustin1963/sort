@@ -1,0 +1,104 @@
+// bubble-sort 3
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 s! 0 f!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main bubble sort implementation
+:B                      // B for Bubble sort
+    a /S n!            // get array size
+    n 0 > /F = (       // if n <= 0
+        `Empty array` /N
+        /T             // exit
+    )
+    
+    /T f!              // f = true (flag for swaps)
+    /U (               // unlimited loop
+        /F f!          // reset flag
+        n 1 - (        // loop n-1 times
+            /i i!      // save current index
+            i 1 + j!   // j = i + 1
+            a i ? a j ? // get values
+            > (        // if out of order
+                W      // swap them
+                /T f!  // set flag
+            ) ' '     // clean stack
+        )
+        f /F = /W     // continue while swaps occur
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic case
+    [ 5 4 3 2 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 3: With duplicates
+    [ 3 1 4 1 5 ] a!
+    `Test 3 - With duplicates` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+
+    // Test 4: Larger array
+    [ 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Test 4 - Larger array` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D /N
+;
+
+// Performance test
+:R                      // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 ] a!
+    `Performance Test - 16 elements` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D
+;
+
+// Simple test with small array
+:S                      // S for Simple sort
+    [ 3 1 4 1 5 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    B
+    `After:` /N
+    D
+;
