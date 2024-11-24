@@ -1,0 +1,188 @@
+// pancake-sort 2
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 0 m!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Helper function to find max index
+:M                      // M for Max index finder
+    i m!              // initialize max index
+    i 1 + k!          // k = i + 1
+    j 1 + (           // loop to j+1
+        /i k!         // current index
+        a k ? a m ? > ( // if current > max
+            k m!      // update max index
+        ) '
+    )
+;
+
+// Helper function to flip subarray
+:F                      // F for Flip
+    i!                 // start index
+    j!                 // end index
+    /U (              // unlimited loop
+        i j < /W      // while i < j
+        i j W         // swap elements
+        i 1 + i!      // i++
+        j 1 - j!      // j--
+    )
+;
+
+// Main pancake sort implementation
+:P                      // P for Pancake sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    n k!              // k = size
+    /U (              // unlimited loop
+        k 1 > /W      // while k > 1
+        
+        // Find max in unsorted portion
+        0 k 1 - i! j!  // set range [0, k-1]
+        M              // find max index
+        
+        // If max not at k-1, flip it there
+        m k 1 - = /F = ( // if max not at end
+            m 0 > (     // if max not at start
+                0 m F   // flip max to start
+            )
+            0 k 1 - F   // flip max to end
+        )
+        
+        k 1 - k!       // decrease k
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Original test case
+    [ 9 5 3 1 8 6 4 2 7 0 ] a!
+    `Test 1 - Original test case` /N
+    `Before:` /N
+    D
+    P
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 0 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    P
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reversed
+    [ 5 4 3 2 1 0 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    P
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 4 2 1 4 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    P
+    `After:` /N
+    D
+    V /N
+;
+
+// Interactive visualization
+:Z                      // Z for viZualize
+    [ 5 4 3 2 1 ] a!
+    `Pancake Sort Visualization` /N
+    `Initial array:` /N
+    D
+    
+    n k!
+    /U (
+        k 1 > /W
+        0 k 1 - i! j!
+        M
+        
+        m k 1 - = /F = (
+            m 0 > (
+                `Flipping 0 to ` m . /N
+                0 m F
+                D
+            )
+            `Flipping 0 to ` k 1 - . /N
+            0 k 1 - F
+            D
+        )
+        k 1 - k!
+    )
+    
+    `Final array:` /N
+    D
+;
+
+// Performance counter
+:C                      // C for Count flips
+    0 t!               // initialize flip counter
+    [ 5 4 3 2 1 ] a!
+    `Counting flips...` /N
+    `Initial array:` /N
+    D
+    
+    n k!
+    /U (
+        k 1 > /W
+        0 k 1 - i! j!
+        M
+        
+        m k 1 - = /F = (
+            m 0 > (
+                0 m F
+                t 1 + t!  // count flip
+            )
+            0 k 1 - F
+            t 1 + t!    // count flip
+        )
+        k 1 - k!
+    )
+    
+    `Final array:` /N
+    D
+    `Total flips: ` t . /N
+;
