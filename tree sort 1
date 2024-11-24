@@ -1,0 +1,224 @@
+// tree sort 1
+
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 t! 0 r!
+
+// Node structure using parallel arrays
+[ 0 0 0 0 0 0 0 0 0 0 ] v! // values
+[ 0 0 0 0 0 0 0 0 0 0 ] l! // left children
+[ 0 0 0 0 0 0 0 0 0 0 ] r! // right children
+0 c!                    // node counter
+
+// Insert value into tree
+:I                      // I for Insert
+    k!                 // key to insert
+    i!                 // current node index
+    
+    i 0 = (           // if empty node
+        k v i ?!      // store value
+        0 l i ?!      // no left child
+        0 r i ?!      // no right child
+        /T            // exit
+    )
+    
+    k v i ? < (       // if key < current
+        l i ? " j!    // get left child
+        j 0 = (       // if no left child
+            c 1 + c!  // increment counter
+            c l i ?!  // set left child
+            k c I     // insert in new node
+        ) /E (        // else
+            k j I     // recurse left
+        )
+    ) /E (           // else
+        r i ? " j!    // get right child
+        j 0 = (       // if no right child
+            c 1 + c!  // increment counter
+            c r i ?!  // set right child
+            k c I     // insert in new node
+        ) /E (        // else
+            k j I     // recurse right
+        )
+    )
+;
+
+// Inorder traversal and store to array
+:N                      // N for iNorder
+    i!                 // current node
+    j!                 // output array index
+    
+    i 0 > (           // if node exists
+        j l i ? N     // traverse left
+        v i ? a j ? ! // store value
+        j 1 + j!      // increment array index
+        j r i ? N     // traverse right
+    )
+;
+
+// Main tree sort
+:S                      // S for Sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    // Initialize tree
+    1 c!              // reset node counter
+    0 v 0 ?!          // clear root
+    0 l 0 ?!
+    0 r 0 ?!
+    
+    // Build tree
+    n (               // for each element
+        /i i!         // get index
+        a i ? 0 I     // insert into tree
+    )
+    
+    // Traverse tree to get sorted array
+    0 0 N             // inorder traversal
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Print tree helper
+:P                      // P for Print tree
+    i!                 // current node
+    k!                 // level
+    
+    i 0 > (           // if node exists
+        // Print right subtree
+        k 1 + r i ? P
+        
+        // Print current node
+        k (           // indent
+            `  `
+        )
+        v i ? . /N
+        
+        // Print left subtree
+        k 1 + l i ? P
+    )
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test suite
+:T                      // T for Test
+    // Test 1: Original example
+    [ 10 7 8 5 6 ] a!
+    `Test 1 - Original example` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    `Tree structure:` /N
+    0 0 P
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reverse sorted
+    [ 5 4 3 2 1 ] a!
+    `Test 3 - Reverse sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 4 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+    V /N
+;
+
+// Visualization of tree building
+:Z                      // Z for viZualize
+    [ 6 3 8 1 5 2 7 ] a!
+    `Tree Sort Visualization` /N
+    `Initial array:` /N
+    D
+    
+    // Initialize tree
+    1 c!
+    0 v 0 ?!
+    0 l 0 ?!
+    0 r 0 ?!
+    
+    // Build tree with visualization
+    n (
+        /i i!
+        `Inserting ` a i ? . /N
+        a i ? 0 I
+        `Current tree:` /N
+        0 0 P
+        /N
+    )
+    
+    `Final tree:` /N
+    0 0 P
+    
+    // Sort array
+    0 0 N
+    
+    `Sorted array:` /N
+    D
+;
+
+// Educational component
+:E                      // E for Educate
+    `Tree Sort Algorithm` /N
+    `------------------` /N
+    `Tree sort works by:` /N
+    `1. Building a binary search tree` /N
+    `2. Performing inorder traversal` /N
+    `3. Collecting sorted elements` /N
+    /N
+    `Time complexity:` /N
+    `- Average: O(n log n)` /N
+    `- Worst: O(n²) with unbalanced tree` /N
+    `Space: O(n) for tree storage` /N
+    /N
+    `Demonstration:` /N
+    [ 4 2 6 1 5 ] a!
+    D
+    S
+    D
+    `Tree structure:` /N
+    0 0 P
+;
