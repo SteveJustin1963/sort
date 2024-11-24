@@ -1,5 +1,5 @@
 // shell sort 1 
-
+// https://en.wikipedia.org/wiki/Shell_sort
 // Initialize variables
 0 n! 0 i! 0 j! 0 k! 0 g! 0 t!
 
