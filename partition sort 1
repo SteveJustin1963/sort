@@ -1,4 +1,5 @@
 // partition sort 1
+// https://medium.com/analytics-vidhya/investigating-quick-sort-partitioning-c70b4240cf4b
 // Initialize variables
 0 n! 0 i! 0 j! 0 k! 0 p! 0 l! 0 r! 0 t!
 
