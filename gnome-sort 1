@@ -1,0 +1,184 @@
+// gnome-sort 1
+// Initialize variables
+0 n! 0 i! 0 j! 0 t! 0 p!
+
+// Helper function to swap elements
+:W                      // W for sWap
+    a i ? t!           // temp = a[i]
+    a j ? a i ?!       // a[i] = a[j]
+    t a j ?!           // a[j] = temp
+;
+
+// Main gnome sort implementation
+:G                      // G for Gnome sort
+    a /S n!            // get array size
+    n 1 < (            // if size < 1
+        `Array too small` /N
+        /T             // exit
+    )
+    
+    1 i!              // start at position 1
+    /U (              // unlimited loop
+        i 0 = (       // if at start
+            1 i!      // move to position 1
+        )
+        
+        i n >= (      // if reached end
+            /T        // exit loop
+        )
+        
+        // Compare current with previous
+        i 1 - j!      // previous position
+        a i ? a j ? < ( // if current < previous
+            i j!       // prepare for swap
+            i 1 - i!   // move back
+            W         // swap elements
+        ) /E (        // else
+            i 1 + i!  // move forward
+        )
+        
+        i n >= /W     // continue while not at end
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Verify sort helper
+:V                      // V for Verify
+    `Verifying sort...` /N
+    a /S 1 - (         // loop through array
+        /i i!          // current position
+        i 1 + j!       // next position
+        a i ? a j ? > ( // if out of order
+            `Sort failed at position ` i . /N
+            /T         // exit
+        ) ' '
+    )
+    `Sort verified successfully` /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic array
+    [ 5 4 3 2 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 4 3 2 1 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+
+    // Test 4: With duplicates
+    [ 4 2 3 2 1 4 3 2 1 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+
+    // Test 5: Two elements
+    [ 2 1 ] a!
+    `Test 5 - Two elements` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+
+    // Test 6: Single element
+    [ 1 ] a!
+    `Test 6 - Single element` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V /N
+;
+
+// Performance test
+:R                      // R for Random test
+    [ 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ] a!
+    `Performance Test - 15 elements` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V
+;
+
+// Simple test
+:S                      // S for Simple test
+    [ 3 1 4 1 5 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    G
+    `After:` /N
+    D
+    V
+;
+
+// Count swaps test
+:C                      // C for Count swaps
+    0 p!               // initialize swap counter
+    [ 5 4 3 2 1 ] a!
+    `Counting swaps...` /N
+    `Before:` /N
+    D
+    
+    // Modified gnome sort with swap counting
+    1 i!              // start at position 1
+    /U (              // unlimited loop
+        i 0 = ( 1 i! )
+        i n >= ( /T )
+        
+        i 1 - j!
+        a i ? a j ? < (
+            i j!
+            i 1 - i!
+            W
+            p 1 + p!  // increment swap counter
+        ) /E (
+            i 1 + i!
+        )
+        
+        i n >= /W
+    )
+    
+    `After:` /N
+    D
+    `Total swaps: ` p . /N
+;
