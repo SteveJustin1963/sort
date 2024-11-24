@@ -1,4 +1,7 @@
+// radix sort 1
+// https://en.wikipedia.org/wiki/Radix_sort
 // Initialize array with test values
+
 [ 100 50 75 200 10 ] a!   // store array in variable a
 
 // Define main radix sort function
