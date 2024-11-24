@@ -1,0 +1,150 @@
+// COUNTING-SORT 1
+// Initialize variables
+0 n! 0 i! 0 j! 0 k! 0 m! 0 c!
+
+// Find max value in array
+:M                      // M for Max
+    a 0 ? m!           // initialize max
+    a /S (             // loop through array
+        a /i ? " m     // get current and compare
+        > (            // if current > max
+            m!         // update max
+        ) '           // drop if not greater
+    )
+;
+
+// Create and initialize count array
+:C                      // C for Create count array
+    m 1 + n!           // size = max + 1
+    [ 0 0 0 0 0 0 0 0 0 0    // initialize count array
+      0 0 0 0 0 0 0 0 0 0 ] b! // with zeros (adjust size as needed)
+;
+
+// Main counting sort implementation
+:S                      // S for Sort
+    // Validate input
+    a /S 0 = (         // if array empty
+        `Empty array` /N
+        /T             // exit
+    )
+    
+    M                  // find maximum value
+    m 20 > (           // if max too large
+        `Values too large` /N
+        /T             // exit
+    )
+    
+    C                  // create count array
+    
+    // Count occurrences
+    a /S (             // for each element
+        a /i ? k!      // get current value
+        b k ? 1 +      // increment count
+        b k ?!         // store back
+    )
+    
+    // Calculate cumulative counts
+    1 n (              // for i=1 to max
+        b /i 1 - ? b /i ? +  // add previous count
+        b /i ?!             // store back
+    )
+    
+    // Create output array
+    [ 0 0 0 0 0 0 0 0 0 0    // initialize output array
+      0 0 0 0 0 0 0 0 0 0 ] c! // (adjust size as needed)
+      
+    // Build output array
+    a /S 1 - n!        // n = size - 1
+    n -1 (             // loop backwards
+        /i i!          // save index
+        a i ? k!       // get value
+        b k ? 1 - j!   // get position
+        k c j ?!       // place in output
+        b k ? 1 -      // decrement count
+        b k ?!         // store back
+    )
+    
+    // Copy back to original array
+    a /S (             // for each position
+        c /i ? a /i ?! // copy from output to input
+    )
+;
+
+// Print array helper
+:D                      // D for Display
+    `Array:` /N
+    a /S (             // loop array size times
+        a /i ? .       // print number
+        ` `           // space
+    ) /N
+;
+
+// Test function with multiple cases
+:T                      // T for Test
+    // Test 1: Basic array
+    [ 4 2 2 8 3 3 1 ] a!
+    `Test 1 - Basic sort` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 2: Already sorted
+    [ 1 2 3 4 5 ] a!
+    `Test 2 - Already sorted` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 3: Reversed
+    [ 9 8 7 6 5 ] a!
+    `Test 3 - Reversed array` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 4: Many duplicates
+    [ 1 4 1 2 7 5 2 ] a!
+    `Test 4 - With duplicates` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+
+    // Test 5: Single value repeated
+    [ 2 2 2 2 2 ] a!
+    `Test 5 - Same values` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D /N
+;
+
+// Performance test
+:R                      // R for Random test
+    [ 19 18 17 16 15 14 13 12 11 10 ] a!
+    `Performance Test` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+;
+
+// Simple test
+:P                      // P for Plain test
+    [ 5 3 1 4 2 ] a!
+    `Simple Test` /N
+    `Before:` /N
+    D
+    S
+    `After:` /N
+    D
+;
